@@ -1,5 +1,7 @@
 # Human Activity Recognition
 
+[![CI](https://github.com/chaitanya2404/human-activity-recognition/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/chaitanya2404/human-activity-recognition/actions/workflows/ci.yml?query=branch%3Amaster+event%3Apush)
+
 A classifier that identifies human physical activity (e.g. walking, sitting, standing, laying) from smartphone accelerometer/gyroscope sensor readings, using the classic HAR (Human Activity Recognition) dataset collected from 30 subjects.
 
 ## What it does
@@ -40,6 +42,26 @@ Learning Repository](https://archive.ics.uci.edu/dataset/240/human+activity+reco
 (no account or API key needed) and assembles it into the flat
 `train.csv` / `test.csv` shape the notebook expects. The dataset itself
 (~65 MB) is not checked into this repo — see `.gitignore`.
+
+## Continuous integration
+
+This project is a notebook plus a data-download script, so there is no unit
+test suite. CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) instead
+verifies, on every push and pull request, that the pinned dependencies install
+on Python 3.10 and 3.12, that `download_data.py` lints (ruff), byte-compiles,
+imports and exposes a working CLI, and that the committed notebook is a valid
+`nbformat` document with no stored error outputs.
+
+Actually executing the notebook downloads the ~65 MB dataset from the UCI
+archive and trains both MLPs, so that runs in a separate job — weekly on a
+schedule, or on demand via **Run workflow** with the *run_notebook* box ticked.
+That job is an upstream-availability canary rather than a check on this code, so
+the badge above is scoped to `branch=master&event=push`: a UCI archive outage
+shows up as a failed scheduled run in the Actions tab without repainting the
+badge red.
+
+Lint rules are pinned in [`ruff.toml`](./ruff.toml) (`E4`, `E7`, `E9`, `F`)
+alongside the pinned ruff version, so the lint result depends only on the code.
 
 ## Notebook
 
